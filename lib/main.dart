@@ -1,72 +1,67 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/animation.dart';
+import 'package:flutter/rendering.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: FadeTransitionExampleState(),
+      title: 'Flutter Tutorial',
+      home: _AnimatedCrossFadeExample(),
     );
   }
 }
 
-class FadeTransitionExampleState extends StatefulWidget {
+class _AnimatedCrossFadeExample extends StatefulWidget {
   @override
-  _FadeTransitionExampleStateState createState() =>
-      _FadeTransitionExampleStateState();
+  _AnimatedCrossFadeExampleState createState() =>
+      new _AnimatedCrossFadeExampleState();
 }
 
-class _FadeTransitionExampleStateState extends State<FadeTransitionExampleState>
-    with TickerProviderStateMixin {
+class _AnimatedCrossFadeExampleState extends State<_AnimatedCrossFadeExample> with TickerProviderStateMixin {
   AnimationController _controller;
-  Animation<double> _animation;
+  Animation<Offset> _animation;
 
-  initState() {
+  @override
+  void initState() {
     super.initState();
 
     _controller = AnimationController(
-        duration: const Duration(milliseconds: 5000),
-        vsync: this,
-        value: 0,
-        lowerBound: 0,
-        upperBound: 1);
-
-    _animation =
-        CurvedAnimation(parent: _controller, curve: Curves.bounceInOut);
-
-    _controller.forward();
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    )..forward();
+    _animation = Tween<Offset>(
+      begin: const Offset(-0.5, 0.0),
+      end: const Offset(0.5, 0.0),
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInCubic,
+    ));
   }
 
   @override
-  dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Flutter Tutorial'),
       ),
-      body: Center(
-        child: ScaleTransition(
-          scale: _animation,
-          child: Center(
-            child: Text(
-              'Flutter',
-              style: TextStyle(color: Colors.teal, fontSize: 50),
+      body: Builder(
+          builder: (context) => Center(
+            child: SlideTransition(
+              position: _animation,
+             // transformHitTests: false,
+              textDirection: TextDirection.ltr,
+              child: RaisedButton(
+                child: Text('Flutter'),
+                onPressed: () {
+                  Scaffold.of(context).showSnackBar(
+                      SnackBar(content: Text('Button is pressed'))
+                  );
+                },
+              ),
             ),
-          ),
-        ),
+          )
       ),
     );
   }
