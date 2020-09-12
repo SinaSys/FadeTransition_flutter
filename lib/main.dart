@@ -7,50 +7,61 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Woolha.com Flutter Tutorial',
-      home: _RotationTransitionExample(),
+      title: 'Flutter Tutorial',
+      home: _AnimatedAlignExample(),
     );
   }
 }
 
-class _RotationTransitionExample extends StatefulWidget {
-  _RotationTransitionExampleState createState() => _RotationTransitionExampleState();
+class _AnimatedAlignExample extends StatefulWidget {
+  _AnimatedAlignExampleState createState() =>
+      _AnimatedAlignExampleState();
 }
 
-class _RotationTransitionExampleState extends State<_RotationTransitionExample> with TickerProviderStateMixin {
+class _AnimatedAlignExampleState
+    extends State<_AnimatedAlignExample> {
+  AlignmentGeometry _alignment = Alignment.topRight;
 
-  AnimationController _controller;
-  Animation<double> _animation;
-
-  initState() {
-    super.initState();
-    _controller = AnimationController(
-        duration: const Duration(milliseconds: 2000),
-        vsync: this,
-        value: 1.0,
-        lowerBound: 0.0,
-        upperBound: 1.0
-    );
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.linear);
-
-    _controller.forward();
+  void _changeAlignment() {
+    setState(() {
+      _alignment = _alignment == Alignment.topRight
+          ? Alignment.bottomLeft
+          : Alignment.topRight;
+    });
   }
 
   @override
-  dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Tutorial'),
+        title: Text("Animated Align"),
       ),
       body: Center(
-        child: RotationTransition(
-            turns: _animation,
-            child: Text('Flutter', style: TextStyle(color: Colors.teal, fontSize: 36))
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+              height: 120.0,
+              width: 120.0,
+              color: Colors.blue[50],
+              child: AnimatedAlign(
+                alignment: _alignment,
+                curve: Curves.ease,
+                duration: Duration(seconds: 3),
+                child: FlutterLogo(
+                  size: 60,
+                ),
+              ),
+            ),
+            FlatButton(
+              onPressed: () {
+                _changeAlignment();
+              },
+              child: Text(
+                "Click Me!",
+              ),
+            )
+          ],
         ),
       ),
     );
