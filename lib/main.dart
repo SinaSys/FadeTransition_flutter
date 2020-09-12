@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter/animation.dart';
 
 void main() => runApp(MyApp());
 
@@ -7,61 +7,51 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Tutorial',
-      home: _AnimatedCrossFadeExample(),
+      title: 'Woolha.com Flutter Tutorial',
+      home: _RotationTransitionExample(),
     );
   }
 }
 
-class _AnimatedCrossFadeExample extends StatefulWidget {
-  @override
-  _AnimatedCrossFadeExampleState createState() =>
-      new _AnimatedCrossFadeExampleState();
+class _RotationTransitionExample extends StatefulWidget {
+  _RotationTransitionExampleState createState() => _RotationTransitionExampleState();
 }
 
-class _AnimatedCrossFadeExampleState extends State<_AnimatedCrossFadeExample> with TickerProviderStateMixin {
+class _RotationTransitionExampleState extends State<_RotationTransitionExample> with TickerProviderStateMixin {
+
   AnimationController _controller;
-  Animation<Offset> _animation;
+  Animation<double> _animation;
 
-  @override
-  void initState() {
+  initState() {
     super.initState();
-
     _controller = AnimationController(
-      duration: const Duration(seconds: 3),
-      vsync: this,
-    )..forward();
-    _animation = Tween<Offset>(
-      begin: const Offset(-0.5, 0.0),
-      end: const Offset(0.5, 0.0),
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInCubic,
-    ));
+        duration: const Duration(milliseconds: 2000),
+        vsync: this,
+        value: 1.0,
+        lowerBound: 0.0,
+        upperBound: 1.0
+    );
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.linear);
+
+    _controller.forward();
   }
 
   @override
+  dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Flutter Tutorial'),
       ),
-      body: Builder(
-          builder: (context) => Center(
-            child: SlideTransition(
-              position: _animation,
-             // transformHitTests: false,
-              textDirection: TextDirection.ltr,
-              child: RaisedButton(
-                child: Text('Flutter'),
-                onPressed: () {
-                  Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text('Button is pressed'))
-                  );
-                },
-              ),
-            ),
-          )
+      body: Center(
+        child: RotationTransition(
+            turns: _animation,
+            child: Text('Flutter', style: TextStyle(color: Colors.teal, fontSize: 36))
+        ),
       ),
     );
   }
