@@ -8,26 +8,29 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Tutorial',
-      home: _AnimatedPaddingExample(),
+      home: _AnimatedSizeExample(),
     );
   }
 }
 
-class _AnimatedPaddingExample extends StatefulWidget {
-  _AnimatedPaddingExampleState createState() => _AnimatedPaddingExampleState();
+class _AnimatedSizeExample extends StatefulWidget {
+  _AnimatedSizeExampleState createState() => _AnimatedSizeExampleState();
 }
 
-class _AnimatedPaddingExampleState extends State<_AnimatedPaddingExample> {
+class _AnimatedSizeExampleState extends State<_AnimatedSizeExample>
+    with SingleTickerProviderStateMixin {
 
-  EdgeInsets _padding = EdgeInsets.zero;
+  bool _first = true;
 
-  void _changePadding() {
+  double _width = 200;
+  double _height = 200;
+
+  void _updateSize() {
     setState(() {
-      if (_padding.left == 100) {
-        _padding = EdgeInsets.only(top: 100, bottom: 100);
-      } else {
-        _padding = EdgeInsets.only(left: 100, right: 100);
-      }
+      _width = _first ? 220 : 200;
+      _height = _first ? 160 : 200;
+
+      _first = !_first;
     });
   }
 
@@ -35,33 +38,38 @@ class _AnimatedPaddingExampleState extends State<_AnimatedPaddingExample> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Animated Padding"),
+        title: Text("Animated Size"),
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 300.0,
-              width: 300.0,
-              child: AnimatedPadding(
-                padding: _padding,
-                curve: Curves.ease,
-                duration: Duration(seconds: 1),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            height: 300,
+            child: Center(
+              child: AnimatedSize(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.fastOutSlowIn,
                 child: Container(
+                  width: _width,
+                  height: _height,
                   color: Colors.blue,
                 ),
+                vsync: this,
               ),
             ),
-            FlatButton(
-              onPressed: () {
-                _changePadding();
-              },
-              child: Text(
-                "Click Me!",
-              ),
-            )
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          RaisedButton(
+            child: const Text('CLICK ME!'),
+            onPressed: () {
+              setState(() {
+                _updateSize();
+              });
+            },
+          ),
+        ],
       ),
     );
   }
