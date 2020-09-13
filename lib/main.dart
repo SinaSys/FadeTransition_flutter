@@ -8,64 +8,62 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Tutorial',
-      home: _AnimatedSizeExample(),
+      home: _AnimatedPositionedExample(),
     );
   }
 }
 
-class _AnimatedSizeExample extends StatefulWidget {
-  _AnimatedSizeExampleState createState() => _AnimatedSizeExampleState();
+class _AnimatedPositionedExample extends StatefulWidget {
+  _AnimatedPositionedExampleState createState() => _AnimatedPositionedExampleState();
 }
 
-class _AnimatedSizeExampleState extends State<_AnimatedSizeExample>
-    with SingleTickerProviderStateMixin {
+class _AnimatedPositionedExampleState extends State<_AnimatedPositionedExample> {
 
   bool _first = true;
 
-  double _width = 200;
-  double _height = 200;
-
-  void _updateSize() {
-    setState(() {
-      _width = _first ? 220 : 200;
-      _height = _first ? 160 : 200;
-
-      _first = !_first;
-    });
-  }
+  double _left = 20;
+  double _top = 20;
+  double _right = 20;
+  double _bottom = 20;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Animated Size"),
+        title: Text("Animated Positioned"),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
             height: 300,
-            child: Center(
-              child: AnimatedSize(
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.fastOutSlowIn,
-                child: Container(
-                  width: _width,
-                  height: _height,
-                  color: Colors.blue,
+            child: Stack(
+              children: <Widget>[
+                AnimatedPositioned(
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.fastOutSlowIn,
+                  left: _left,
+                  top: _top,
+                  right: _right,
+                  bottom: _bottom,
+                  child: Container(
+                    color: Colors.blue,
+                  ),
                 ),
-                vsync: this,
-              ),
+              ],
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
+          SizedBox(height: 20,),
           RaisedButton(
             child: const Text('CLICK ME!'),
             onPressed: () {
               setState(() {
-                _updateSize();
+                _left = _first ? 10 : 20;
+                _top = _first ? 70 : 20;
+                _right = _first ? 10 : 20;
+                _bottom = _first ? 70 : 20;
+
+                _first = !_first;
               });
             },
           ),
