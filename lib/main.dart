@@ -8,25 +8,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Tutorial',
-      home: _AnimatedAlignExample(),
+      home: _AnimatedPaddingExample(),
     );
   }
 }
 
-class _AnimatedAlignExample extends StatefulWidget {
-  _AnimatedAlignExampleState createState() =>
-      _AnimatedAlignExampleState();
+class _AnimatedPaddingExample extends StatefulWidget {
+  _AnimatedPaddingExampleState createState() => _AnimatedPaddingExampleState();
 }
 
-class _AnimatedAlignExampleState
-    extends State<_AnimatedAlignExample> {
-  AlignmentGeometry _alignment = Alignment.topRight;
+class _AnimatedPaddingExampleState extends State<_AnimatedPaddingExample> {
 
-  void _changeAlignment() {
+  EdgeInsets _padding = EdgeInsets.zero;
+
+  void _changePadding() {
     setState(() {
-      _alignment = _alignment == Alignment.topRight
-          ? Alignment.bottomLeft
-          : Alignment.topRight;
+      if (_padding.left == 100) {
+        _padding = EdgeInsets.only(top: 100, bottom: 100);
+      } else {
+        _padding = EdgeInsets.only(left: 100, right: 100);
+      }
     });
   }
 
@@ -34,28 +35,26 @@ class _AnimatedAlignExampleState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Animated Align"),
+        title: Text("Animated Padding"),
       ),
       body: Center(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Container(
-              height: 120.0,
-              width: 120.0,
-              color: Colors.blue[50],
-              child: AnimatedAlign(
-                alignment: _alignment,
+              height: 300.0,
+              width: 300.0,
+              child: AnimatedPadding(
+                padding: _padding,
                 curve: Curves.ease,
-                duration: Duration(seconds: 3),
-                child: FlutterLogo(
-                  size: 60,
+                duration: Duration(seconds: 1),
+                child: Container(
+                  color: Colors.blue,
                 ),
               ),
             ),
             FlatButton(
               onPressed: () {
-                _changeAlignment();
+                _changePadding();
               },
               child: Text(
                 "Click Me!",
