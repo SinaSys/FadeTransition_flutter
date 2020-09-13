@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/animation.dart';
 
 void main() => runApp(MyApp());
 
@@ -8,60 +7,59 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Tutorial',
-      home: _AnimatedPhysicalModel(),
+      home: _AnimatedDefaultTextStyle(),
     );
   }
 }
 
-class _AnimatedPhysicalModel extends StatefulWidget {
+class _AnimatedDefaultTextStyle extends StatefulWidget {
 
-  _AnimatedPhysicalModelState createState() =>
-      _AnimatedPhysicalModelState();
+  _AnimatedDefaultTextStyleState createState() =>
+      _AnimatedDefaultTextStyleState();
 }
 
-class _AnimatedPhysicalModelState
-    extends State<_AnimatedPhysicalModel> {
+class _AnimatedDefaultTextStyleState
+    extends State<_AnimatedDefaultTextStyle> {
 
   bool _first = true;
+
+  double _fontSize = 60;
+  Color _color = Colors.blue;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Animated Physical Model"),
+        title: Text("Animated Default TextStyle"),
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            AnimatedPhysicalModel(
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.fastOutSlowIn,
-              elevation: _first ? 0 : 6.0,
-              shape: BoxShape.rectangle,
-              shadowColor: Colors.black,
-              color: Colors.white,
-              borderRadius: _first
-                  ? const BorderRadius.all(Radius.circular(0))
-                  : const BorderRadius.all(Radius.circular(10)),
-              child: Container(
-                height: 120.0,
-                width: 120.0,
-                color: Colors.blue[50],
-                child: FlutterLogo(
-                  size: 60,
+            Container(
+              height: 120,
+              child: AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 300),
+                style: TextStyle(
+                  fontSize: _fontSize,
+                  color: _color,
+                  fontWeight: FontWeight.bold,
                 ),
+                child: Text('Flutter'),
               ),
             ),
-            SizedBox(height: 20,),
-            RaisedButton(
-              child: const Text('Click Me!'),
+            FlatButton(
               onPressed: () {
                 setState(() {
+                  _fontSize = _first ? 90 : 60;
+                  _color = _first ? Colors.blue : Colors.red;
                   _first = !_first;
                 });
               },
-            ),
+              child: Text(
+                "CLICK ME!",
+              ),
+            )
           ],
         ),
       ),
