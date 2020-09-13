@@ -8,49 +8,57 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Tutorial',
-      home: _AnimatedSwitcherExample(),
+      home: _AnimatedPhysicalModel(),
     );
   }
 }
 
-class _AnimatedSwitcherExample extends StatefulWidget {
-  _AnimatedSwitcherExampleState createState() =>
-      _AnimatedSwitcherExampleState();
+class _AnimatedPhysicalModel extends StatefulWidget {
+
+  _AnimatedPhysicalModelState createState() =>
+      _AnimatedPhysicalModelState();
 }
 
-class _AnimatedSwitcherExampleState
-    extends State<_AnimatedSwitcherExample> {
-  int _count = 0;
+class _AnimatedPhysicalModelState
+    extends State<_AnimatedPhysicalModel> {
+
+  bool _first = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("AnimatedSwitcher"),
+        title: Text("Animated Physical Model"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            AnimatedSwitcher(
+            AnimatedPhysicalModel(
               duration: const Duration(milliseconds: 500),
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                return ScaleTransition(child: child, scale: animation);
-              },
-              child: Text(
-                '$_count',
-                // This key causes the AnimatedSwitcher to interpret this as a "new"
-                // child each time the count changes, so that it will begin its animation
-                // when the count changes.
-                style: Theme.of(context).textTheme.headline3,
-                key: ValueKey<int>(_count),
+              curve: Curves.fastOutSlowIn,
+              elevation: _first ? 0 : 6.0,
+              shape: BoxShape.rectangle,
+              shadowColor: Colors.black,
+              color: Colors.white,
+              borderRadius: _first
+                  ? const BorderRadius.all(Radius.circular(0))
+                  : const BorderRadius.all(Radius.circular(10)),
+              child: Container(
+                height: 120.0,
+                width: 120.0,
+                color: Colors.blue[50],
+                child: FlutterLogo(
+                  size: 60,
+                ),
               ),
             ),
+            SizedBox(height: 20,),
             RaisedButton(
-              child: const Text('Increment'),
+              child: const Text('Click Me!'),
               onPressed: () {
                 setState(() {
-                  _count += 1;
+                  _first = !_first;
                 });
               },
             ),
